@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#define MAX 30
 
 char *tiposProductos[]={"Galletas","Snack","Cigarrillos","Caramelos","Bebidas"};
 
@@ -19,6 +20,8 @@ struct Cliente{
     Producto *Productos; // El tamaño de este arreglo depende de la variable "cantidadProductosAPedir"
 }typedef Cliente;
 
+void cargarClientes(Cliente *Lista, int cantClientes);
+
 
 int main(){
     int cantClientes = 10;
@@ -30,6 +33,35 @@ int main(){
     }
 
     Lista = malloc(sizeof(Cliente)*cantClientes);
+    cargarClientes(Lista, cantClientes);
 
     return 0;
+}
+
+
+void cargarClientes(Cliente *Lista, int cantClientes){
+    char buff[MAX];
+    int i, j, tipoProductoAux;
+    srand(time(NULL));
+    for(i = 0; i<cantClientes; i++){
+        Lista->ClienteID = i + 1; //Asigno la ID
+
+        printf("Ingrese el nombre del cliente %d\n", Lista->ClienteID);
+        fflush(stdin);
+        gets(buff);
+        Lista->NombreCliente = malloc(sizeof(char)*strlen(buff)+1); //Asigno dinamicamente memoria para el nombre
+        strcpy(Lista->NombreCliente, buff);
+
+        Lista->cantidadProductosAPedir = rand()%5+1;
+        Lista->Productos = malloc(sizeof(Producto)*Lista->cantidadProductosAPedir);
+        for(j = 0; j < Lista->cantidadProductosAPedir; j++){
+            Lista->Productos->ProductoID = j+1;
+            Lista->Productos->cantidad = rand()%10+1;
+            tipoProductoAux = rand()%5;
+            Lista->Productos->tipoProducto = tiposProductos[tipoProductoAux];
+            Lista->Productos->PrecioUnitario = (float)(rand()%100+1);
+            Lista->Productos++;
+        }
+        Lista++;
+    }
 }
